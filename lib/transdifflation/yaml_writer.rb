@@ -12,15 +12,8 @@ module Transdifflation
       end
       yaml_string = yaml_string.split("\n").map(&:rstrip).join("\n").strip
     end
-
-
-
   end
-
 end
-
-
-
 
 #Method used to prettify generated YAML. Expands Hash class
 class Hash
