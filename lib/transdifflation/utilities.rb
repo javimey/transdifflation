@@ -15,7 +15,6 @@ module Transdifflation
       hash
     end
   end
-
 end
 
 class Hash
@@ -26,7 +25,6 @@ class Hash
     new_self = symbolizer.symbolize(self)
     self.clear
     self.merge!(new_self)
-
   end
 
 end

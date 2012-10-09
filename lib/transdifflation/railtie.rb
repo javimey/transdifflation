@@ -117,16 +117,6 @@ module Transdifflation
         raise "Gem 'Transdifflation' says => #{e.message}"  
 
       end
-
-
-
     end
-
-
-
-
   end
-
-
-
 end
