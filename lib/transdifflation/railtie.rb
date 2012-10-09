@@ -6,12 +6,11 @@ module Transdifflation
   class Railtie < Rails::Railtie
 
 
-    search_locations = %w[lib/tasks/transdifflation.yml transdifflation.yml]
+    search_locations = %w[config/transdifflation.yml transdifflation.yml]
 
     railtie_name :transdifflation
     rake_tasks do
       begin
-
 
         file_task_config = nil
         search_locations.each do |path| #Take config file from these locations
@@ -97,10 +96,17 @@ module Transdifflation
         end
 
       rescue Transdifflation::ConfigFileNotFound
-
-        Transdifflation::Comparer.generate_config_example_file File.expand_path('lib/tasks/transdifflation.yml', Rails.root)
-        raise "Gem 'Transdifflation' says => Config file not found, searching files in \n\t*%s\nGenerating example in %s" % [ search_locations.map {|path| File.expand_path(path, Rails.root) }.join("\n\t*"),
-         File.expand_path('lib/tasks/transdifflation.yml', Rails.root) ]
+       
+        #Generate task to set-up 
+        namespace :transdifflation do
+          desc "Task to set-up config file in host"
+          task :setup do
+              destination_file = File.expand_path('config/transdifflation.yml', Rails.root)
+              destination_path = File.dirname(destination_file)
+              Transdifflation::Comparer.generate_config_example_file destination_file
+              puts "\nCopied a transdifflation.yml example into '#{destination_path}'"
+          end
+        end
 
       rescue Transdifflation::ConfigFileWithErrors => e
 
