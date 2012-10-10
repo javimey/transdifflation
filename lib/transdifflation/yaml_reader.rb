@@ -1,4 +1,5 @@
 module Transdifflation
+  # Reads YAML from the specified source
   class YAMLReader
 
     # Get YAML content from a gem

@@ -4,10 +4,12 @@ require 'transdifflation/yaml_writer'
 require 'transdifflation/exceptions'
 require 'transdifflation/utilities'
 
+# The main module for the program
 module Transdifflation
 
   require 'transdifflation/railtie' if defined?(Rails) 
 
+  # Implements the core
   class Comparer
 
 
@@ -89,6 +91,12 @@ module Transdifflation
 
     private
 
+    # Build the initial translation file
+    #
+    # @param [String] yml_source_content  Content to translate
+    # @param [String] host_target_file    The filename to create
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_first_time_file(yml_source_content, host_target_file, from_locale, to_locale)
 
       puts "Target translation file '#{host_target_file}' not found, generating it for the first time"
