@@ -18,5 +18,14 @@ Gem::Specification.new do |gem|
   #Dependencies
   gem.add_dependency 'rails', '~> 3.2.8'
 
+  gem.add_development_dependency 'rspec', '>= 2.8.0'
+  gem.add_development_dependency 'guard-rspec'
+  gem.add_development_dependency 'yard'
+  gem.add_development_dependency 'redcarpet'
+  gem.add_development_dependency 'RedCloth'
+  gem.add_development_dependency 'simplecov'
+  gem.add_development_dependency 'rb-inotify'
+  gem.add_development_dependency 'libnotify'
+  gem.add_development_dependency 'pry'
 end
 

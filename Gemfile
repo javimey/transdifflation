@@ -4,10 +4,16 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails'
-gem 'rspec'
+
+group :development, :test do
+  gem 'fudge', :git => 'git@github.com:Sage/fudge.git'
+  gem 'rspec'
+  gem 'yard'
+  gem 'simplecov'
 
   gem 'rspec-rails'
   gem 'guard-sass', :require => false
-gem 'pry'
-gem "guard-rspec"
+  gem 'pry'
+  gem "guard-rspec"
   gem 'rb-fsevent', :require => false
+end
