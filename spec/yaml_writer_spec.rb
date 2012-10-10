@@ -2,7 +2,6 @@ require 'spec_helper'
 
 
 describe :YAMLWriter do
-
   describe :to_yaml do
     it 'should convert to ya2yaml format an input hash' do
       hashy = {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
@@ -13,7 +12,6 @@ describe :YAMLWriter do
       hashy = {:movie => "Avengers"}
       Transdifflation::YAMLWriter.to_yaml(hashy).should be == ":movie: Avengers"
     end
-
   end
 
   describe :deep_stringify_keys do
