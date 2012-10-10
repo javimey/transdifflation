@@ -19,10 +19,10 @@ module Transdifflation
 
     # Get Diff from YAML translation locale file from a gem and generate differences in a file on our host
     #
-    # @param [String] Installed gem's name
-    # @param [String] Path of the file inside gem's source code
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
+    # @param [String] gem_name    Installed gem's name
+    # @param [String] path_to_yaml_in_gem Path of the file inside gem's source code
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_transdifflation_from_gem(gem_name, path_to_yaml_in_gem, from_locale=:en, to_locale=:es )
 
       #default values in optional params
@@ -53,10 +53,10 @@ module Transdifflation
 
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
-    # @param [String] Tag name this file will be installed on host
-    # @param [String] Path to the file in system, relative from Rails.root
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
+    # @param [String] tag_name    Tag name this file will be installed on host
+    # @param [String] path_to_yaml_relative_from_rails_root Path to the file in system, relative from Rails.root
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_transdifflation_from_file(tag_name, path_to_yaml_relative_from_rails_root, from_locale=:en, to_locale=:es )
 
       #default values in optional params
@@ -114,10 +114,10 @@ module Transdifflation
 
     # Recursively translate hash from YAML file
     #
-    # @param [Hash] Hash from origin YAML file
-    # @param [Hash] Hash from target YAML file
-    # @param [Symbol] Locale used to translate 'from'
-    # @param [Symbol] Locale used to translate 'to'
+    # @param [Hash]   source      Hash from origin YAML file
+    # @param [Hash]   target      Hash from target YAML file
+    # @param [Symbol] from_locale Locale used to translate 'from'
+    # @param [Symbol] to_locale   Locale used to translate 'to'
     def translate_keys_in_same_yaml(source, target, from_locale, to_locale)
 
       source.each_pair { |source_key, source_value|
@@ -189,12 +189,12 @@ module Transdifflation
 
     # Recursively generate difference hash from YAML file
     #
-    # @param [Hash] Hash from origin YAML file
-    # @param [Hash] Hash from target YAML file
-    # @param [Hash] Hash containing differences; at the first time, it should be empty
-    # @param [Array] Array containing trace of the key generated, recursively. At the first time, it should be empty
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
+    # @param [Hash]   source           Hash from origin YAML file
+    # @param [Hash]   target           Hash from target YAML file
+    # @param [Hash]   added_diff_hash  Hash containing differences; at the first time, it should be empty
+    # @param [Array]  key_trace_passed Array containing trace of the key generated, recursively. At the first time, it should be empty
+    # @param [Symbol] from_locale      Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale        Default locale in host. Used to translate 'to'
     # @return [Hash] the resulting hash translated
     def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale)
 
