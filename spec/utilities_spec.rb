@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe :symbolize! do
   it 'convert a key in a Hash (presumily from YAML) in symbol' do

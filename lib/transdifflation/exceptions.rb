@@ -1,5 +1,3 @@
-
-
 module Transdifflation
 
   class ConfigFileNotFound < ::StandardError ; end
