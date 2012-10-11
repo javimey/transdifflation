@@ -6,13 +6,10 @@ require 'transdifflation/utilities'
 
 # The main module for the program
 module Transdifflation
-
   require 'transdifflation/railtie' if defined?(Rails) 
 
   # Implements the core
   class Comparer
-
-
     attr_reader :has_changes
 
     def initialize()
@@ -52,7 +49,6 @@ module Transdifflation
     end
 
 
-
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
     # @param [String] tag_name    Tag name this file will be installed on host
@@ -84,11 +80,6 @@ module Transdifflation
       @has_changes
     end
 
-
-
-
-
-
     private
 
     # Build the initial translation file
@@ -98,27 +89,20 @@ module Transdifflation
     # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
     # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_first_time_file(yml_source_content, host_target_file, from_locale, to_locale)
-
       puts "Target translation file '#{host_target_file}' not found, generating it for the first time"
 
       #create a file
       host_target_file_stream = File.open(host_target_file, "a+:UTF-8")
-
       begin
-
         translated_yaml = {}
         #translate from source yaml content, to target existant yml
         translate_keys_in_same_yaml(yml_source_content, translated_yaml, from_locale, to_locale)
-
         host_target_file_stream.write(YAMLWriter.to_yaml(translated_yaml))
         @has_changes = true
       ensure
-
         host_target_file_stream.close
       end
-
     end
-
 
     # Recursively translate hash from YAML file
     #
@@ -137,23 +121,16 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-
           if(!target.has_key? (source_key_translated))
             target[source_key_translated] = Hash.new
           end
-
           translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale) #recurrence of other hashes
-
         else
           #it's a leaf node
           target[source_key_translated] = "**NOT_TRANSLATED** #{source_value}" if  !target.has_key? (source_key_translated)
         end
       }
-
     end
-
-
-
 
     def generate_diff_file(yml_source_content, host_target_file, from_locale, to_locale)
 
@@ -179,19 +156,14 @@ module Transdifflation
             diff_file_stream.write("REMOVED KEYS (Keys not found in source file, founded in your file) ********************\n")
             diff_file_stream.write(YAMLWriter.to_yaml(removed_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
           end
-
         ensure
           diff_file_stream.close
         end
         puts "File #{File.basename( host_target_file )} processed >> %s" %  [ "#{File.basename( diff_file )} has the changes!"]
         @has_changes = true
-
       else 
         puts "File #{File.basename( host_target_file )} processed >> No changes!"
-
       end
-
-
     end
 
 
@@ -207,22 +179,17 @@ module Transdifflation
     def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale)
 
       source.each_pair { |source_key, source_value|
-
         key_trace = key_trace_passed.dup #each pair should have a clear copy of the same array
-
         key_is_symbol = source_key.instance_of? Symbol
         source_key_translated = source_key.to_s.sub(/^#{from_locale}$/, "#{to_locale}")
         source_key_translated = source_key_translated.to_sym if key_is_symbol
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-
           key_trace.push source_key_translated #add the key to the trace to be generated if necessary
           target[source_key_translated] = Hash.new if(!target.has_key? (source_key_translated))  #to continue trace, otherwise, node will not exist in next iteration
           generate_added_diff(source_value, target[source_key_translated], added_diff_hash, key_trace, from_locale, to_locale) #recursively call
-
         else #it's a leaf node
-
           if !target.has_key? (source_key_translated)
             added_diff_hash_positioned = added_diff_hash #pointer to added_diff_hash
             key_trace.each do |key|  #add the keys if necessary on the accurate level
@@ -231,15 +198,9 @@ module Transdifflation
             end
             added_diff_hash_positioned[source_key_translated] = "**NOT_TRANSLATED** #{source_value}"     #add the inexistant key
           end
-
         end
       }
-
     end
-
-   
-
-
 
     def self.generate_config_example_file(path)
       FileUtils.copy(File.expand_path('./transdifflation/transdifflation.yml', File.dirname( __FILE__ )), path)
