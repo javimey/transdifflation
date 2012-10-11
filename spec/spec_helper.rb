@@ -1,4 +1,8 @@
 require 'rubygems'
+require 'simplecov'
+SimpleCov.start do
+  add_filter "spec/"
+end
 
 require 'transdifflation/version'
 require 'transdifflation/yaml_reader'
