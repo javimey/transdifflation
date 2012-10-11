@@ -1,10 +1,11 @@
 module Transdifflation
+  # Reads YAML from the specified source
   class YAMLReader
 
     # Get YAML content from a gem
     #
-    # @param [String] Installed gem's name
-    # @param [String] Path of the file inside gem's source code
+    # @param [String] gem_name                 Installed gem's name
+    # @param [String] file_path_to_yaml_in_gem Path of the file inside gem's source code
     def self.read_YAML_from_gem(gem_name, file_path_to_yaml_in_gem)
 
       #get where the gem is localized
@@ -22,7 +23,7 @@ module Transdifflation
 
     # Get YAML content from a file in filesystem
     #
-    # @param [String] Tag name this file will be intalled on host
+    # @param [String] path_to_yaml_relative_from_rails_root  Tag name this file will be intalled on host
     def self.read_YAML_from_filesystem(path_to_yaml_relative_from_rails_root)
 
       #get the file
@@ -37,7 +38,7 @@ module Transdifflation
 
     # Get YAML content from a file in filesystem
     #
-    # @param [String] Tag name this file will be intalled on host
+    # @param [String] path_to_yaml  Tag name this file will be intalled on host
     def self.read_YAML_from_pathfile(path_to_yaml)
 
       #get the file
