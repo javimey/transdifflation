@@ -12,7 +12,9 @@ module Transdifflation
   # Implements the core
   class Comparer
 
+    #const string added to keys not translated
     NOT_TRANSLATED = "**NOT_TRANSLATED** "
+    #Instance variable to get if changes have been detected
     attr_reader :has_changes
 
     def initialize()
