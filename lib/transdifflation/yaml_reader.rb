@@ -17,7 +17,6 @@ module Transdifflation
 
       #read the yml content file
       get_YAML_content_from_YAML_file(yaml_file_in_gem_SRC)
-     
     end
 
     # Get YAML content from a file in filesystem
@@ -32,7 +31,6 @@ module Transdifflation
 
       #read the yml content file
       get_YAML_content_from_YAML_file(yaml_file_path)
-     
     end
 
     # Get YAML content from a file in filesystem
@@ -45,7 +43,7 @@ module Transdifflation
       raise ArgumentError.new("File '#{yaml_file_name}' does not exists in path '#{path_to_yaml}'") if (!File.file?(path_to_yaml))
 
       #read the yml content file
-      get_YAML_content_from_YAML_file(path_to_yaml)     
+      get_YAML_content_from_YAML_file(path_to_yaml)
     end
 
     private

@@ -1,8 +1,6 @@
 require 'spec_helper'
 require_relative "../lib/transdifflation"
 
-
-
 describe :get_transdifflation_from_gem do
  before(:each) do
    unless defined?(::Rails)
@@ -11,7 +9,7 @@ describe :get_transdifflation_from_gem do
      end
    end
  end
- 
+
  it 'should call get_first_time_file if the files does not exist' do
     gem_name = 'rake'
     path_to_yaml_in_gem = 'spec/spec_helper.rb'
@@ -57,6 +55,7 @@ describe :get_transdifflation_from_gem do
   end
 end
 
+
 describe :get_transdifflation_from_file do
  before(:each) do
    unless defined?(::Rails)
@@ -67,7 +66,6 @@ describe :get_transdifflation_from_file do
  end
  
  it 'should call get_first_time_file if the files does not exist' do
-   
     tag_name = 'my_tag'
     path_to_yaml_relative_from_rails_root = 'spec/spec_helper.rb'
     from_locale= :en
@@ -103,12 +101,11 @@ describe :get_transdifflation_from_file do
     ::Rails.should_receive(:root).and_return('/rails')
     File.stub(:gsub).and_return('idontcare')
     #File? Should return false, to simulate that the file is not created
-    File.stub(:file?).and_return(true)
+    File.stub(:file?).and_return(true)    
     comparer = Transdifflation::Comparer.new
     # And finally we are checking which method is being called, making them throw different exceptions
     comparer.stub(:get_first_time_file).and_raise(ArgumentError)
     comparer.stub(:generate_diff_file).and_raise(NameError)
     expect {comparer.get_transdifflation_from_file(tag_name, path_to_yaml_relative_from_rails_root, from_locale, to_locale) }.to raise_error(NameError)
-    
   end
 end
