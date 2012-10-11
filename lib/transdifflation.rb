@@ -11,7 +11,7 @@ module Transdifflation
 
   class Comparer
 
-
+    NOT_TRANSLATED = "**NOT_TRANSLATED** "
     attr_reader :has_changes
 
     def initialize()
@@ -119,7 +119,7 @@ module Transdifflation
     # @param [Hash] Hash from target YAML file
     # @param [Symbol] Locale used to translate 'from'
     # @param [Symbol] Locale used to translate 'to'
-    def translate_keys_in_same_yaml(source, target, from_locale, to_locale)
+    def translate_keys_in_same_yaml(source, target, from_locale, to_locale, add_NOT_TRANSLATED=true)
 
       source.each_pair { |source_key, source_value|
 
@@ -135,11 +135,11 @@ module Transdifflation
             target[source_key_translated] = Hash.new
           end
 
-          translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale) #recurrence of other hashes
+          translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
 
         else
           #it's a leaf node
-          target[source_key_translated] = "**NOT_TRANSLATED** #{source_value}" if  !target.has_key? (source_key_translated)
+          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
         end
       }
 
@@ -154,7 +154,16 @@ module Transdifflation
       added_diff_hash, removed_diff_hash = Hash.new, Hash.new
 
       generate_added_diff(yml_source_content, existant_yml, added_diff_hash, Array.new, from_locale, to_locale)
-      generate_added_diff( existant_yml, yml_source_content, removed_diff_hash, Array.new,  to_locale, from_locale)
+      generate_added_diff(existant_yml, yml_source_content, removed_diff_hash, Array.new,  to_locale, from_locale, false)
+
+      if (removed_diff_hash.length > 0)
+        #we have to reprocess hash to show user what happened
+        temp_removed_diff_hash = {}
+        translate_keys_in_same_yaml(removed_diff_hash, temp_removed_diff_hash, from_locale, to_locale, false)
+        removed_diff_hash = temp_removed_diff_hash
+        
+      end
+
 
       if( added_diff_hash.length > 0 || removed_diff_hash.length > 0 )
 
@@ -167,11 +176,13 @@ module Transdifflation
             diff_file_stream.write(YAMLWriter.to_yaml(added_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
           end
 
-          if (added_diff_hash.length > 0)
+          if (removed_diff_hash.length > 0)
             diff_file_stream.write("\n\n") if (added_diff_hash.length > 0)
             diff_file_stream.write("REMOVED KEYS (Keys not found in source file, founded in your file) ********************\n")
             diff_file_stream.write(YAMLWriter.to_yaml(removed_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
           end
+
+         
 
         ensure
           diff_file_stream.close
@@ -197,7 +208,7 @@ module Transdifflation
     # @param [Symbol] Default locale in gem. Used to translate 'from'
     # @param [Symbol] Default locale in host. Used to translate 'to'
     # @return [Hash] the resulting hash translated
-    def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale)
+    def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale, add_NOT_TRANSLATED=true)
 
       source.each_pair { |source_key, source_value|
 
@@ -212,7 +223,7 @@ module Transdifflation
 
           key_trace.push source_key_translated #add the key to the trace to be generated if necessary
           target[source_key_translated] = Hash.new if(!target.has_key? (source_key_translated))  #to continue trace, otherwise, node will not exist in next iteration
-          generate_added_diff(source_value, target[source_key_translated], added_diff_hash, key_trace, from_locale, to_locale) #recursively call
+          generate_added_diff(source_value, target[source_key_translated], added_diff_hash, key_trace, from_locale, to_locale, add_NOT_TRANSLATED) #recursively call
 
         else #it's a leaf node
 
@@ -222,7 +233,7 @@ module Transdifflation
               added_diff_hash_positioned [key] = Hash.new if(!added_diff_hash_positioned.has_key? key )
               added_diff_hash_positioned = added_diff_hash_positioned [key] #and position pointer to next level
             end
-            added_diff_hash_positioned[source_key_translated] = "**NOT_TRANSLATED** #{source_value}"     #add the inexistant key
+            added_diff_hash_positioned[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}")    #add the inexistant key
           end
 
         end
@@ -230,8 +241,8 @@ module Transdifflation
 
     end
 
-   
 
+    
 
 
     def self.generate_config_example_file(path)
