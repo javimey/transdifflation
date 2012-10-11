@@ -26,6 +26,7 @@ describe :YAMLReader do
       File.stub(:file?).and_return(true)
       ::Rails.should_receive(:root).and_return('/rails')
 
+      
       expect {Transdifflation::YAMLReader.read_YAML_from_filesystem('whatever')}.to_not raise_error(ArgumentError)
     end
   end
