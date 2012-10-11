@@ -1,9 +1,8 @@
-require "transdifflation/version"
-require "transdifflation/yaml_reader"
-require "transdifflation/yaml_writer"
-require "transdifflation/exceptions"
-require "transdifflation/utilities"
-
+require 'transdifflation/version'
+require 'transdifflation/yaml_reader'
+require 'transdifflation/yaml_writer'
+require 'transdifflation/exceptions'
+require 'transdifflation/utilities'
 
 module Transdifflation
 

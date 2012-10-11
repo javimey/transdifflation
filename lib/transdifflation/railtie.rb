@@ -4,8 +4,6 @@ require 'rails'
 module Transdifflation
 
   class Railtie < Rails::Railtie
-
-
     search_locations = %w[config/transdifflation.yml transdifflation.yml]
 
     railtie_name :transdifflation
@@ -68,11 +66,8 @@ module Transdifflation
                 comparer.get_transdifflation_from_file(params[:tag_name], params[:file_path_from_rails_root], params[:from_locale],  params[:to_locale])
               end
             end
-
           end
-
           task_all.push (task_name)
-
         end
 
         #Grouped tasks
@@ -86,7 +81,6 @@ module Transdifflation
             desc "Task #{key} (Grouped Task)"
             task key => value
           end
-
         end
 
         #All tasks

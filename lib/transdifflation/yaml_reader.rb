@@ -1,8 +1,5 @@
 module Transdifflation
-
   class YAMLReader
-
-
 
     # Get YAML content from a gem
     #
@@ -18,15 +15,10 @@ module Transdifflation
       yaml_file_in_gem_SRC = File.join( gem_SRC, file_path_to_yaml_in_gem )
       raise ArgumentError.new("File '#{file_path_to_yaml_in_gem}' does not exists in gem '#{gem_name}'") if (!File.file?(yaml_file_in_gem_SRC))
 
-
       #read the yml content file
       get_YAML_content_from_YAML_file(yaml_file_in_gem_SRC)
-
      
     end
-
-
-
 
     # Get YAML content from a file in filesystem
     #
@@ -38,13 +30,10 @@ module Transdifflation
       yaml_file_name = File.basename( yaml_file_path )
       raise ArgumentError.new("File '#{yaml_file_name}' does not exists in path '#{yaml_file_path}'") if (!File.file?(yaml_file_path))
 
-     
       #read the yml content file
       get_YAML_content_from_YAML_file(yaml_file_path)
      
     end
-
-
 
     # Get YAML content from a file in filesystem
     #
@@ -55,29 +44,21 @@ module Transdifflation
       yaml_file_name = File.basename( path_to_yaml )
       raise ArgumentError.new("File '#{yaml_file_name}' does not exists in path '#{path_to_yaml}'") if (!File.file?(path_to_yaml))
 
-     
       #read the yml content file
-      get_YAML_content_from_YAML_file(path_to_yaml)
-     
+      get_YAML_content_from_YAML_file(path_to_yaml)     
     end
-
-
 
     private
 
     def self.get_YAML_content_from_YAML_file(yml_path_file)
 
       #read the yml content file
-      yml_source_content = YAML.load_file (yml_path_file)
+      yml_source_content = YAML.load_file(yml_path_file)
       yml_source_content = {} if (yml_source_content == false)
 
       #return
       yml_source_content
 
     end
-
-
   end
-
-
 end

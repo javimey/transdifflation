@@ -58,7 +58,7 @@ These nodes generates rake tasks. There are two types of tasks:
 
 *   type **file**: When it rans, it looks for the file in 'file_path_from_rails_root' is installed. It uses from_locale and to_locale to translate names and keys inside yaml. Tag_name is used to name target file in our host.
 
-Execute ```rake -T``` to determine sucess of config file.
+Execute ```rake transdifflation:config``` to determine sucess of config file.
 
 Also, you can create grouped tasks in a node called 'grouped_taks'. Task **all** is automatially generated.  
 
