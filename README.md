@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-It needs a config file (**transdifflation.yml**) placed on your host root, or in 'lib/tasks'. Config file looks like:
+It needs a config file (**transdifflation.yml**) placed on your host root, or in 'config'. If not exists, a rake task is set up to generate it: ```rake transdifflation:config```. Config file looks like:
 
 ```yml
 tasks:
@@ -58,9 +58,11 @@ These nodes generates rake tasks. There are two types of tasks:
 
 *   type **file**: When it rans, it looks for the file in 'file_path_from_rails_root' is installed. It uses from_locale and to_locale to translate names and keys inside yaml. Tag_name is used to name target file in our host.
 
-Execute ```rake transdifflation:config``` to determine sucess of config file.
-
 Also, you can create grouped tasks in a node called 'grouped_taks'. Task **all** is automatially generated.  
+
+Execute ```rake -T``` to determine sucess of config file. Your tasks should appear there, under namespace ```transdifflation:```
+
+
 
 
 ## Contributing
