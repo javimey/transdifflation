@@ -60,7 +60,7 @@ These nodes generates rake tasks. There are two types of tasks:
 
 Also, you can create grouped tasks in a node called 'grouped_taks'. Task **all** is automatially generated.  
 
-Execute ```rake -T``` to determine sucess of config file. Your tasks should appear there, under namespace ```transdifflation:```
+Execute ```rake -T``` to determine sucess of config file. Your tasks should appear there, under namespace ```transdifflation:``
 
 
 
