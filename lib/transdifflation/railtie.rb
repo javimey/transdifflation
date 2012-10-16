@@ -1,15 +1,22 @@
-require 'transdifflation'
 require 'rails'
+require 'transdifflation'
+
+
+
+
+
 
 module Transdifflation
 
   # Adds behaviours to Rails
   class Railtie < Rails::Railtie
     search_locations = %w[config/transdifflation.yml transdifflation.yml]
-
     railtie_name :transdifflation
     rake_tasks do
       begin
+        
+        Dir[ File.join(File.dirname(__FILE__), '../tasks/*.rake')] .each { |f| load f }  #Load static tasks
+
 
         file_task_config = nil
         search_locations.each do |path| #Take config file from these locations
