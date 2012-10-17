@@ -64,5 +64,14 @@ describe :translation_coverage do
 
 			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "80% 8/10 words translated"
 		end
+
+		it 'should return 62.50% when you have 5/8 terms translated' do
+			@comparer = Transdifflation::Comparer.new
+			hash_from_locale = { :one => "one", :two => "two", :three => "tree", :four => "four", :five => "five", :six => "six", :seven => "seven", :eight => "eight" }
+			hash_to_locale =   { :one => "uno", :two => "**NOT TRANSLATED** two", :three => "tres", :four => "cuatro", :five => "cinco", :six => "**NOT TRANSLATED** six", :seven => "**NOT TRANSLATED** seven", :eight => "ocho"}
+			token = "**NOT TRANSLATED**"
+
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "80% 8/10 words translated"
+		end
 	end
 end
