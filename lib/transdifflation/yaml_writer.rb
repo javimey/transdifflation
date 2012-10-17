@@ -1,5 +1,6 @@
 module Transdifflation
 
+  # Writes YAML
   class YAMLWriter
 
     #Method used to prettify generated YAML
@@ -17,6 +18,7 @@ end
 
 #Method used to prettify generated YAML. Expands Hash class
 class Hash
+  # Convert keys into strings recursively
   def deep_stringify_keys
     new_hash = {}
     self.each do |key, value|

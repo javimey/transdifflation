@@ -4,10 +4,17 @@ require 'transdifflation/yaml_writer'
 require 'transdifflation/exceptions'
 require 'transdifflation/utilities'
 
+# The main module for the program
 module Transdifflation
+
   require 'transdifflation/railtie' if defined?(Rails) 
 
+  # Implements the core
   class Comparer
+
+    #const string added to keys not translated
+    NOT_TRANSLATED = "**NOT_TRANSLATED** "
+    #Instance variable to get if changes have been detected
     attr_reader :has_changes
 
     def initialize()
@@ -16,11 +23,10 @@ module Transdifflation
 
     # Get Diff from YAML translation locale file from a gem and generate differences in a file on our host
     #
-    # @param [String] Installed gem's name
-    # @param [String] Path of the file inside gem's source code
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
-
+    # @param [String] gem_name    Installed gem's name
+    # @param [String] path_to_yaml_in_gem Path of the file inside gem's source code
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_transdifflation_from_gem(gem_name, path_to_yaml_in_gem, from_locale=:en, to_locale=:es )
 
       #default values in optional params
@@ -48,13 +54,13 @@ module Transdifflation
     end
 
 
+
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
-    # @param [String] Tag name this file will be installed on host
-    # @param [String] Path to the file in system, relative from Rails.root
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
-
+    # @param [String] tag_name    Tag name this file will be installed on host
+    # @param [String] path_to_yaml_relative_from_rails_root Path to the file in system, relative from Rails.root
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_transdifflation_from_file(tag_name, path_to_yaml_relative_from_rails_root, from_locale=:en, to_locale=:es )
 
       #default values in optional params
@@ -80,31 +86,50 @@ module Transdifflation
       @has_changes
     end
 
+
+
+
+
+
     private
 
+    # Build the initial translation file
+    #
+    # @param [String] yml_source_content  Content to translate
+    # @param [String] host_target_file    The filename to create
+    # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_first_time_file(yml_source_content, host_target_file, from_locale, to_locale)
+
       puts "Target translation file '#{host_target_file}' not found, generating it for the first time"
 
       #create a file
       host_target_file_stream = File.open(host_target_file, "a+:UTF-8")
+
       begin
+
         translated_yaml = {}
         #translate from source yaml content, to target existant yml
         translate_keys_in_same_yaml(yml_source_content, translated_yaml, from_locale, to_locale)
+
         host_target_file_stream.write(YAMLWriter.to_yaml(translated_yaml))
         @has_changes = true
       ensure
+
         host_target_file_stream.close
       end
+
     end
+
 
     # Recursively translate hash from YAML file
     #
-    # @param [Hash] Hash from origin YAML file
-    # @param [Hash] Hash from target YAML file
-    # @param [Symbol] Locale used to translate 'from'
-    # @param [Symbol] Locale used to translate 'to'
-    def translate_keys_in_same_yaml(source, target, from_locale, to_locale)
+    # @param [Hash]   source      Hash from origin YAML file
+    # @param [Hash]   target      Hash from target YAML file
+    # @param [Symbol] from_locale Locale used to translate 'from'
+    # @param [Symbol] to_locale   Locale used to translate 'to'
+    # @param [Boolean] add_NOT_TRANSLATED   Boolean to set if it should add "**NOT_TRANSLATED** " to value (default = true)
+    def translate_keys_in_same_yaml(source, target, from_locale, to_locale, add_NOT_TRANSLATED=true)
 
       source.each_pair { |source_key, source_value|
 
@@ -115,13 +140,16 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
+
           if(!target.has_key? (source_key_translated))
             target[source_key_translated] = Hash.new
           end
-          translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale) #recurrence of other hashes
+
+          translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
+
         else
           #it's a leaf node
-          target[source_key_translated] = "**NOT_TRANSLATED** #{source_value}" if  !target.has_key? (source_key_translated)
+          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
         end
       }
     end
@@ -132,7 +160,16 @@ module Transdifflation
       added_diff_hash, removed_diff_hash = Hash.new, Hash.new
 
       generate_added_diff(yml_source_content, existant_yml, added_diff_hash, Array.new, from_locale, to_locale)
-      generate_added_diff( existant_yml, yml_source_content, removed_diff_hash, Array.new,  to_locale, from_locale)
+      generate_added_diff(existant_yml, yml_source_content, removed_diff_hash, Array.new,  to_locale, from_locale, false)
+
+      if (removed_diff_hash.length > 0)
+        #we have to reprocess hash to show user what happened
+        temp_removed_diff_hash = {}
+        translate_keys_in_same_yaml(removed_diff_hash, temp_removed_diff_hash, from_locale, to_locale, false)
+        removed_diff_hash = temp_removed_diff_hash
+        
+      end
+
 
       if( added_diff_hash.length > 0 || removed_diff_hash.length > 0 )
 
@@ -145,11 +182,12 @@ module Transdifflation
             diff_file_stream.write(YAMLWriter.to_yaml(added_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
           end
 
-          if (added_diff_hash.length > 0)
+          if (removed_diff_hash.length > 0)
             diff_file_stream.write("\n\n") if (added_diff_hash.length > 0)
             diff_file_stream.write("REMOVED KEYS (Keys not found in source file, founded in your file) ********************\n")
             diff_file_stream.write(YAMLWriter.to_yaml(removed_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
           end
+
         ensure
           diff_file_stream.close
         end
@@ -163,14 +201,15 @@ module Transdifflation
 
     # Recursively generate difference hash from YAML file
     #
-    # @param [Hash] Hash from origin YAML file
-    # @param [Hash] Hash from target YAML file
-    # @param [Hash] Hash containing differences; at the first time, it should be empty
-    # @param [Array] Array containing trace of the key generated, recursively. At the first time, it should be empty
-    # @param [Symbol] Default locale in gem. Used to translate 'from'
-    # @param [Symbol] Default locale in host. Used to translate 'to'
+    # @param [Hash]   source           Hash from origin YAML file
+    # @param [Hash]   target           Hash from target YAML file
+    # @param [Hash]   added_diff_hash  Hash containing differences; at the first time, it should be empty
+    # @param [Array]  key_trace_passed Array containing trace of the key generated, recursively. At the first time, it should be empty
+    # @param [Symbol] from_locale      Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale        Default locale in host. Used to translate 'to'
+    # @param [Boolean] add_NOT_TRANSLATED   Boolean to set if it should add "**NOT_TRANSLATED** " to value (default = true)
     # @return [Hash] the resulting hash translated
-    def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale)
+    def generate_added_diff(source, target, added_diff_hash, key_trace_passed, from_locale, to_locale, add_NOT_TRANSLATED=true)
 
       source.each_pair { |source_key, source_value|
         key_trace = key_trace_passed.dup #each pair should have a clear copy of the same array
@@ -184,17 +223,22 @@ module Transdifflation
           target[source_key_translated] = Hash.new if(!target.has_key? (source_key_translated))  #to continue trace, otherwise, node will not exist in next iteration
           generate_added_diff(source_value, target[source_key_translated], added_diff_hash, key_trace, from_locale, to_locale) #recursively call
         else #it's a leaf node
+
           if !target.has_key? (source_key_translated)
             added_diff_hash_positioned = added_diff_hash #pointer to added_diff_hash
             key_trace.each do |key|  #add the keys if necessary on the accurate level
               added_diff_hash_positioned [key] = Hash.new if(!added_diff_hash_positioned.has_key? key )
               added_diff_hash_positioned = added_diff_hash_positioned [key] #and position pointer to next level
             end
-            added_diff_hash_positioned[source_key_translated] = "**NOT_TRANSLATED** #{source_value}"     #add the inexistant key
+            added_diff_hash_positioned[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}")    #add the inexistant key
           end
         end
       }
     end
+
+   
+
+
 
     def self.generate_config_example_file(path)
       FileUtils.copy(File.expand_path('./transdifflation/transdifflation.yml', File.dirname( __FILE__ )), path)

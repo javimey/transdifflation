@@ -3,6 +3,7 @@ require 'rails'
 
 module Transdifflation
 
+  # Adds behaviours to Rails
   class Railtie < Rails::Railtie
     search_locations = %w[config/transdifflation.yml transdifflation.yml]
 
