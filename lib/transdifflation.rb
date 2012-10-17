@@ -4,6 +4,8 @@ require 'transdifflation/yaml_writer'
 require 'transdifflation/exceptions'
 require 'transdifflation/utilities'
 
+require 'pry'
+
 # The main module for the program
 module Transdifflation
 
@@ -88,9 +90,6 @@ module Transdifflation
     end
 
 
-
-
-
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
     # @param [String] source I18n source translation to compare
@@ -105,8 +104,40 @@ module Transdifflation
     end
 
 
+    # Get Coverage rate from two hashes, depending on the number of keys that have a given token
+    #
+    # @param [Hash] hash_from_locale I18n source translation to compare
+    # @param [Hash] hash_to_locale I18n target translation to compare
+    # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
+    
+    def coverage_rate(hash_from_locale, hash_to_locale, token)
+      
+      if hash_from_locale.nil?
+        return "Translation coverage error: from_locale language not detected."
+      end
+
+      if hash_to_locale.nil?
+        return "Translation coverage error: to_locale language not detected."
+      end
+      
+      if hash_from_locale.empty?
+        return "from_locale is empty, so you have everything translated"         
+      end
+
+      words = 0
+      found = 0
+      hash_from_locale.each_pair{ |key, value|
+        words = words + 1
+        if hash_to_locale[key.to_sym]
+          found = found +1 if !hash_to_locale[key.to_sym].include?(token) #^(\*\*NOT TRANSLATED\*\*)+\w$
+        end
+      }
+      percent = (found.to_f/words.to_f) * 100
+      return "#{percent.to_i}% #{found}/#{words} words translated"
 
 
+
+    end
 
 
 
@@ -256,13 +287,8 @@ module Transdifflation
       }
     end
 
-   
-
-
-
     def self.generate_config_example_file(path)
       FileUtils.copy(File.expand_path('./transdifflation/transdifflation.yml', File.dirname( __FILE__ )), path)
     end
-
   end
 end
