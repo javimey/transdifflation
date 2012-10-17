@@ -126,20 +126,35 @@ module Transdifflation
 
       words = 0
       found = 0
-      hash_from_locale.each_pair{ |key, value|
-        words = words + 1
-        if hash_to_locale[key.to_sym]
-          found = found +1 if !hash_to_locale[key.to_sym].include?(token) #^(\*\*NOT TRANSLATED\*\*)+\w$
-        end
-      }
+
+      words, found = rate_from_branch(hash_from_locale, hash_to_locale, token, words, found)
       percent = (found.to_f/words.to_f) * 100
-      return "#{percent.to_i}% #{found}/#{words} words translated"
-
-
-
+      truncate = "%.2f" % percent
+      return "#{truncate}% #{found}/#{words} words translated"
     end
 
+    def rate_from_branch(hash_from, hash_to, token, words, found)
+      # {:a => "hola"} , {:a => "**NOT TRANSLATED hello"}
+      #  { :house => "house", :street => {:street_name => "street name", :postal => "postal code"}} , { :house => "house", :street => {:street_name => "street name", :postal => "postal code"}}
 
+      hash_from.each_pair{ |key, value|
+        if hash_from[key.to_sym].instance_of? Hash
+          if hash_to[key.to_sym]
+            words, found = rate_from_branch(hash_from[key.to_sym], hash_to[key.to_sym], token, words, found)
+          else
+          # Sum other words
+          # could have nested branches
+          words, temp = rate_from_branch(hash_from[key.to_sym], hash_from[key.to_sym], token, words, found)
+          end
+        else
+          words = words + 1
+          if hash_to[key.to_sym]
+            found = found +1 if !hash_to[key.to_sym].include?(token) #^(\*\*NOT TRANSLATED\*\*)+\w$
+          end          
+        end
+      }
+      return words, found
+    end      
 
     private
 
@@ -190,16 +205,12 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-
           if(!target.has_key? (source_key_translated))
             target[source_key_translated] = Hash.new
           end
-
           translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
-
         else
           #it's a leaf node
-
           target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
         end
       }
