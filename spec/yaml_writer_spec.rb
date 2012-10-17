@@ -12,6 +12,14 @@ describe :YAMLWriter do
       hashy = {:movie => "Avengers"}
       Transdifflation::YAMLWriter.to_yaml(hashy).should be == ":movie: Avengers"
     end
+
+    it 'should chomp if matches with the regex: /\?\s+/' do
+      hashy = {:movie => "Avengers"}
+      Regex = "!ruby/symbol ---? \"es\"\n"   
+      hashy.deep_stringify_keys.stub(:send).and_return(Regex)
+
+      Transdifflation::YAMLWriter.to_yaml(hashy).should be == ":\"es\""
+    end
   end
 
   describe :deep_stringify_keys do
@@ -19,6 +27,7 @@ describe :YAMLWriter do
      hashy = {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
      hashy.deep_stringify_keys.should == {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
     end
+    
     it 'should print all the nodes from a hash in the exact same order' do
      hashy = {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
      hashy.deep_stringify_keys.should == hashy

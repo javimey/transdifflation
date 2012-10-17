@@ -24,15 +24,9 @@ describe :lost_in_translation do
 		end
 
 		it 'should return no differences if target has more info than source' do
-
 			i18n_en = { :en => {:one_key => 'one', :another_key => 'another'} }
 			i18n_es = { :es => {:one_key => 'uno', :another_key => 'dos', :another_one => 'tres'} }
 			@comparer.get_rest_of_translation(i18n_en, i18n_es, :en, :es).should eql({})
-
 		end
-
-
 	end
-
-
 end
