@@ -110,8 +110,7 @@ module Transdifflation
     # @param [Hash] hash_to_locale I18n target translation to compare
     # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
     
-    def coverage_rate(hash_from_locale, hash_to_locale, token)
-      
+    def coverage_rate(hash_from_locale, hash_to_locale, token)      
       if hash_from_locale.nil?
         return "Translation coverage error: from_locale language not detected."
       end
@@ -134,8 +133,6 @@ module Transdifflation
     end
 
     def rate_from_branch(hash_from, hash_to, token, words, found)
-      # {:a => "hola"} , {:a => "**NOT TRANSLATED hello"}
-      #  { :house => "house", :street => {:street_name => "street name", :postal => "postal code"}} , { :house => "house", :street => {:street_name => "street name", :postal => "postal code"}}
 
       hash_from.each_pair{ |key, value|
         if hash_from[key.to_sym].instance_of? Hash
@@ -143,13 +140,13 @@ module Transdifflation
             words, found = rate_from_branch(hash_from[key.to_sym], hash_to[key.to_sym], token, words, found)
           else
           # Sum other words
-          # could have nested branches
+          # could have nested branches, so we call it with hash_from[key.to_sym] to count the number of words, returning the found to a temporal var
           words, temp = rate_from_branch(hash_from[key.to_sym], hash_from[key.to_sym], token, words, found)
           end
         else
           words = words + 1
           if hash_to[key.to_sym]
-            found = found +1 if !hash_to[key.to_sym].include?(token) #^(\*\*NOT TRANSLATED\*\*)+\w$
+            found = found + 1 if !hash_to[key.to_sym].include?(token) 
           end          
         end
       }
@@ -167,12 +164,10 @@ module Transdifflation
     def get_first_time_file(yml_source_content, host_target_file, from_locale, to_locale)
 
       puts "Target translation file '#{host_target_file}' not found, generating it for the first time"
-
       #create a file
       host_target_file_stream = File.open(host_target_file, "a+:UTF-8")
 
       begin
-
         translated_yaml = {}
         #translate from source yaml content, to target existant yml
         translate_keys_in_same_yaml(yml_source_content, translated_yaml, from_locale, to_locale)
@@ -180,10 +175,8 @@ module Transdifflation
         host_target_file_stream.write(YAMLWriter.to_yaml(translated_yaml))
         @has_changes = true
       ensure
-
         host_target_file_stream.close
       end
-
     end
 
 
