@@ -4,7 +4,7 @@ module Transdifflation
 
   #Class used to convert all keys in a hash (included sub-hashes) in symbols
   class HashSymbolTranslator
-    # Convert keys
+    # Convert keys (strings) into symbols
     def symbolize(hash)
       hash = hash.inject({}) { |memo,(k,v)| 
           if(v.instance_of? Hash)
@@ -15,7 +15,7 @@ module Transdifflation
       }
       hash
     end
-
+     # Convert keys into string
      def unsymbolize(hash)
       hash = hash.inject({}) { |memo,(k,v)| 
           if(v.instance_of? Hash)

@@ -93,8 +93,8 @@ module Transdifflation
 
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
-    # @param [String] tag_name    Tag name this file will be installed on host
-    # @param [String] path_to_yaml_relative_from_rails_root Path to the file in system, relative from Rails.root
+    # @param [String] source I18n source translation to compare
+    # @param [String] target I18n target translation to compare
     # @param [Symbol] from_locale Default locale in gem. Used to translate 'from'
     # @param [Symbol] to_locale   Default locale in host. Used to translate 'to'
     def get_rest_of_translation(source, target, from_locale, to_locale)
