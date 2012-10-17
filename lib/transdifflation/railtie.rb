@@ -98,7 +98,6 @@ module Transdifflation
         end
 
       rescue Transdifflation::ConfigFileNotFound
-       
         #Generate task to set-up 
         namespace :transdifflation do
           desc "Task to set-up config file in host"

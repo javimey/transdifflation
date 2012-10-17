@@ -4,7 +4,7 @@ What is Transdifflation? Transdifflation is an acronym of 'Translation' and 'Dif
 It compares two .yml locate files, one in your source code (target) and one in others' (gems, other projects) source code (source) and generates a beside-file with the keys you hadn't translated yet.  
 Then you can merge it. It is designed to detect changes between versions. By now, target file cannot be renamed, and it is generated in 'config/locales/' + to_locale (param in task). Names are inferred by the task params too.
 
-Also, it has two new rake tasks to provide information to you about missing translations between two locales, and continuous integration support.
+Also, it has three new rake tasks to provide information to you about missing translations between two locales, and continuous integration support.
 
 IT NEVER CHANGES YOUR SOURCE FILE, unless it doesn't exists, so it creates for you. 
 
@@ -73,12 +73,13 @@ There are two new tasks in the town:
 
 *   ```rake transdifflation:lost_in_translation[from_locale,to_locale]```
 *   ```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]```
+*   ```rake transdifflation:coverage[from_locale,to_locale]```
 
 These tasks are intended to be used to know what keys are missing between two locales. ```rake transdifflation:lost_in_translation[from_locale,to_locale]``` creates a file in ```[Rails.root]/config/locales/[from_locale]/missing_translations.yml.diff```(on YAML format), that you can use as a template to fulfill your translation.
 
 ```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]``` doesn't create a file, it just fails if missing translations needed, so you can use it in a continuous integration environment, if you want to test that your translations are always completed between your third party gems' new versions, or other vendor's project new releases, or stuff like that...
 
-
+```rake transdifflation:coverage[from_locale,to_locale]``` gives you information and statistics of translations. 
 
 
 

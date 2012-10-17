@@ -8,7 +8,7 @@ module Transdifflation
       method = hash.respond_to?(:ya2yaml) ? :ya2yaml : :to_yaml
       string = hash.deep_stringify_keys.send(method)
       yaml_string = string.gsub("!ruby/symbol ", ":").sub("---","")
-      yaml_string = yaml_string.gsub(/(\?) "([\w\s\\]+)"\n/) do |match|
+      yaml_string = yaml_string.gsub(/(\?) "([\w\s\\]+)"\n/) do |match| #Regex ? "es" \n
         match.sub(/\?\s+/, "").chomp
       end
       yaml_string = yaml_string.split("\n").map(&:rstrip).join("\n").strip

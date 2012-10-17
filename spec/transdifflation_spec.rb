@@ -1,8 +1,6 @@
 require 'spec_helper'
 require_relative "../lib/transdifflation"
 
-
-
 describe :get_transdifflation_from_gem do
 
   before(:each) do

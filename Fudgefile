@@ -1,4 +1,4 @@
 build :default do
   yard :arguments => '-r YardREADME.md', :coverage => 100
-  rspec :coverage => 59
+  rspec :coverage => 72
 end
