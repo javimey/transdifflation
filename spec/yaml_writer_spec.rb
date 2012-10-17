@@ -23,6 +23,11 @@ describe :YAMLWriter do
      hashy = {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
      hashy.deep_stringify_keys.should == hashy
     end
+
+    it 'should print all the nodes from a hash in the exact same order' do
+     hashy = {:en=>{:date=>{:formats=>{:default=>"%d/%m/%Y", :short=>"%d %b"}}}}
+     hashy.deep_stringify_keys.should == hashy
+    end
   end
 
 end
