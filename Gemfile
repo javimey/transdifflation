@@ -6,7 +6,7 @@ gemspec
 gem 'rails'
 
 group :development, :test do
-  gem 'fudge', :git => 'git@github.com:Sage/fudge.git'
+  gem 'fudge'
   gem 'rspec'
   gem 'yard'
   gem 'simplecov'
