@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'transdifflation'
-require 'Rake'
 require 'Rails'
 
 
