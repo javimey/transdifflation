@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "transdifflation"
   gem.require_paths = ["lib"]
-  gem.version       = "0.0.1"
+  gem.version       = Transdifflation::VERSION
 
   #Dependencies
   gem.add_dependency 'rails', '~> 3.2.8'
