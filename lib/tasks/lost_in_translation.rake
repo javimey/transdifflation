@@ -16,8 +16,6 @@ namespace :transdifflation do
 
   end
 
-
-
   desc "What is not translated in our app"
   task :lost_in_translation, [:from_locale, :to_locale] => [:environment] do |t, args|
 
@@ -42,9 +40,6 @@ namespace :transdifflation do
     else
       puts "Sucess! All translation are done!"
     end
-
-
-
   end
 
   desc "Testing in CI what is not translated in our app"

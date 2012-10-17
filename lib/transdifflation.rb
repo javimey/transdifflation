@@ -4,6 +4,8 @@ require 'transdifflation/yaml_writer'
 require 'transdifflation/exceptions'
 require 'transdifflation/utilities'
 
+require 'pry'
+
 # The main module for the program
 module Transdifflation
 
@@ -88,9 +90,6 @@ module Transdifflation
     end
 
 
-
-
-
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
     # @param [String] source I18n source translation to compare
@@ -105,10 +104,54 @@ module Transdifflation
     end
 
 
+    # Get Coverage rate from two hashes, depending on the number of keys that have a given token
+    #
+    # @param [Hash] hash_from_locale I18n source translation to compare
+    # @param [Hash] hash_to_locale I18n target translation to compare
+    # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
+    
+    def coverage_rate(hash_from_locale, hash_to_locale, token)      
+      if hash_from_locale.nil?
+        return "Translation coverage error: from_locale language not detected."
+      end
 
+      if hash_to_locale.nil?
+        return "Translation coverage error: to_locale language not detected."
+      end
+      
+      if hash_from_locale.empty?
+        return "from_locale is empty, so you have everything translated"         
+      end
 
+      words = 0
+      found = 0
 
+      words, found = rate_from_branch(hash_from_locale, hash_to_locale, token, words, found)
+      percent = (found.to_f/words.to_f) * 100
+      truncate = "%.2f" % percent
+      return "#{truncate}% #{found}/#{words} words translated"
+    end
 
+    def rate_from_branch(hash_from, hash_to, token, words, found)
+
+      hash_from.each_pair{ |key, value|
+        if hash_from[key.to_sym].instance_of? Hash
+          if hash_to[key.to_sym]
+            words, found = rate_from_branch(hash_from[key.to_sym], hash_to[key.to_sym], token, words, found)
+          else
+          # Sum other words
+          # could have nested branches, so we call it with hash_from[key.to_sym] to count the number of words, returning the found to a temporal var
+          words, temp = rate_from_branch(hash_from[key.to_sym], hash_from[key.to_sym], token, words, found)
+          end
+        else
+          words = words + 1
+          if hash_to[key.to_sym]
+            found = found + 1 if !hash_to[key.to_sym].include?(token) 
+          end          
+        end
+      }
+      return words, found
+    end      
 
     private
 
@@ -121,12 +164,10 @@ module Transdifflation
     def get_first_time_file(yml_source_content, host_target_file, from_locale, to_locale)
 
       puts "Target translation file '#{host_target_file}' not found, generating it for the first time"
-
       #create a file
       host_target_file_stream = File.open(host_target_file, "a+:UTF-8")
 
       begin
-
         translated_yaml = {}
         #translate from source yaml content, to target existant yml
         translate_keys_in_same_yaml(yml_source_content, translated_yaml, from_locale, to_locale)
@@ -134,10 +175,8 @@ module Transdifflation
         host_target_file_stream.write(YAMLWriter.to_yaml(translated_yaml))
         @has_changes = true
       ensure
-
         host_target_file_stream.close
       end
-
     end
 
 
@@ -159,16 +198,12 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-
           if(!target.has_key? (source_key_translated))
             target[source_key_translated] = Hash.new
           end
-
           translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
-
         else
           #it's a leaf node
-
           target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
         end
       }
@@ -256,13 +291,8 @@ module Transdifflation
       }
     end
 
-   
-
-
-
     def self.generate_config_example_file(path)
       FileUtils.copy(File.expand_path('./transdifflation/transdifflation.yml', File.dirname( __FILE__ )), path)
     end
-
   end
 end
