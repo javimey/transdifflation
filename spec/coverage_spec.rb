@@ -44,7 +44,7 @@ describe :translation_coverage do
 			hash_to_locale  = {}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "0.00% 0/1 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "0.00% 0/1 entries translated"
 		end
 
 		it 'should return 100% when you have everything translated (5/5)' do
@@ -53,7 +53,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno", :two => "dos", :three => "tres", :four => "cuatro", :five => "cinco" }
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "100.00% 5/5 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "100.00% 5/5 entries translated"
 		end
 
 		it 'should return 80% when you have 8/10 terms translated' do
@@ -62,7 +62,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno", :two => "dos", :three => "tres", :four => "cuatro", :five => "cinco", :six => "**NOT TRANSLATED** six", :seven => "**NOT TRANSLATED** seven", :eight => "ocho", :nine => "nueve", :ten => "diez" }
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "80.00% 8/10 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "80.00% 8/10 entries translated"
 		end
 
 
@@ -72,7 +72,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno", :two => "dos", :three => "tres", :four => "cuatro", :five => "cinco", :six => "**NOT TRANSLATED** six", :seven => "**NOT TRANSLATED** seven", :eight => "ocho", :nine => "nueve" }
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "70.00% 7/10 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "70.00% 7/10 entries translated"
 		end
 
 		it 'should return 62.50% when you have 5/8 terms translated' do
@@ -81,7 +81,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno", :two => "**NOT TRANSLATED** two", :three => "tres", :four => "cuatro", :five => "cinco", :six => "**NOT TRANSLATED** six", :seven => "**NOT TRANSLATED** seven", :eight => "ocho"}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "62.50% 5/8 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "62.50% 5/8 entries translated"
 		end
 
 		it 'should return 62.50% when you have 5/8 terms translated, having extra terms at the hash_to_locale hash' do
@@ -90,7 +90,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno", :two => "**NOT TRANSLATED** two", :three => "tres", :four => "cuatro", :five => "cinco", :six => "**NOT TRANSLATED** six", :seven => "**NOT TRANSLATED** seven", :eight => "ocho", :puerta => "Puerta"}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "62.50% 5/8 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "62.50% 5/8 entries translated"
 		end
 
 		it 'should return 100.00% in nested hash' do
@@ -99,16 +99,16 @@ describe :translation_coverage do
 			hash_to_locale = { :house => "casa", :street => {:street_name => "Nombre de la calle", :postal => "codigo postal"}}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "100.00% 3/3 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "100.00% 3/3 entries translated"
 		end
 
-		it 'should return 3 words, 2 translations found' do
+		it 'should return 3 entries, 2 translations found' do
 			@comparer = Transdifflation::Comparer.new
 			hash_from_locale = { :house => "house", :street => {:street_name => "street name", :postal => "postal code"}}
 			hash_to_locale = { :house => "casa", :street => {:street_name => "**NOT TRANSLATED** Nombre de la calle", :postal => "codigo postal"}}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "66.67% 2/3 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "66.67% 2/3 entries translated"
 		end
 
 		it 'should return 0.00% in nested hash' do
@@ -117,7 +117,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno"}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "0.00% 0/5 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "0.00% 0/5 entries translated"
 		end
 
 		it 'should return 10.00% in nested hash' do
@@ -126,7 +126,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno"}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "8.33% 1/12 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "8.33% 1/12 entries translated"
 		end
 
 		it 'should return 8.33% in nested hash with only one term' do
@@ -135,7 +135,7 @@ describe :translation_coverage do
 			hash_to_locale =   { :one => "uno"}
 			token = "**NOT TRANSLATED**"
 
-			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "8.33% 1/12 words translated"
+			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "8.33% 1/12 entries translated"
 		end
 	end
 end
