@@ -54,6 +54,11 @@ grouped_tasks:
   task_group_name: 
     - task_name1
     - task_name2
+
+ignore_paths:
+  - /path_one
+  - gem_path
+
 ```
 
 These nodes generates rake tasks. There are two types of tasks:
@@ -77,9 +82,17 @@ There are two new tasks in the town:
 
 These tasks are intended to be used to know what keys are missing between two locales. ```rake transdifflation:lost_in_translation[from_locale,to_locale]``` creates a file in ```[Rails.root]/config/locales/[from_locale]/missing_translations.yml.diff```(on YAML format), that you can use as a template to fulfill your translation.
 
-```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]``` doesn't create a file, it just fails if missing translations needed, so you can use it in a continuous integration environment, if you want to test that your translations are always completed between your third party gems' new versions, or other vendor's project new releases, or stuff like that...
+```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]```
+doesn't create a file, it just fails if missing translations needed, so
+you can use it in a continuous integration environment, if you want to
+test that your translations are always completed between your third
+party gems' new versions, or other vendor's project new releases, or
+stuff like that... You can configure ignore_paths to ignore whatever gem
+you don't what to check
 
-```rake transdifflation:coverage[from_locale,to_locale]``` gives you information and statistics of translations. 
+```rake transdifflation:coverage[from_locale,to_locale]``` gives you
+information and statistics of translations. You can configure
+ignore_paths too. 
 
 
 

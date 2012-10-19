@@ -5,13 +5,39 @@ namespace :transdifflation do
 
   def get_coverage_rate(from_locale, to_locale)
     #this will access translations method, that is protected in BackEnd in I18n
-    translations = I18n.backend.send(:translations)
+    
+    #Reading config  file
+    search_locations = %w[config/transdifflation.yml transdifflation.yml]
+
+
+    file_task_config = nil
+    search_locations.each do |path| #Take config file from these locations
+      abs_path = File.expand_path(path, Rails.root)
+      if(File.exists?(abs_path))
+        file_task_config = abs_path
+        break
+      end
+    end
+
+    raise Transdifflation::ConfigFileNotFound if file_task_config.nil?
+
+    paths_ignored =  YAML.load_file(file_task_config).symbolize![:ignore_paths]
+    
+    if paths_ignored
+      I18n.reload!
+      paths_ignored.each {|ignored |
+        I18n.load_path.delete_if {|p| p.include?(ignored)}
+      }
+      I18n.backend.load_translations
+
+    end
+
+
     hash_from_locale = translations[from_locale]
     hash_to_locale = translations[to_locale]
 
     comparer = Transdifflation::Comparer.new
     comparer.coverage_rate(hash_from_locale, hash_to_locale)
-
   end
 
   desc "A task to check a translation coverage"
@@ -25,7 +51,6 @@ namespace :transdifflation do
 
     differences = get_coverage_rate(from_locale, to_locale)
     puts "You have #{differences}"
-
   end
 
 
