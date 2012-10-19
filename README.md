@@ -56,8 +56,8 @@ grouped_tasks:
     - task_name2
 
 ignore_paths:
-  - /Faker-
-  - /faker-
+  - /path_one
+  - gem_path
 
 ```
 
