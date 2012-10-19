@@ -1,4 +1,4 @@
-# Transdifflation
+# Transdifflation [![travis-ci](https://secure.travis-ci.org/Sage/transdifflation.png)](http://travis-ci.org/#!/Sage/transdifflation)
 
 What is Transdifflation? Transdifflation is a portmanteau of 'Translation' and 'Diff'.  It helps you to manage the translation of Rails i18n strings that appear in your application and the Ruby Gems it includes.
 
