@@ -11,7 +11,7 @@ group :development, :test do
   gem 'yard'
   gem 'simplecov'
   gem 'rake'
-
+  gem 'rspec'
   gem 'rspec-rails'
   gem 'guard-sass', :require => false
   gem 'pry'
