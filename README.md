@@ -2,12 +2,12 @@
 
 What is Transdifflation? Transdifflation is a portmanteau of 'Translation' and 'Diff'.  It helps you to manage the translation of Rails i18n strings that appear in your application and the Ruby Gems it includes.
 
-It compares two .yml locate files, one in your source code (target) and one in others' (gems, other projects) source code (source) and generates a beside-file with the keys you hadn't translated yet.  
-Then you can merge it. It is designed to detect changes between versions. By now, target file cannot be renamed, and it is generated in 'config/locales/' + to_locale (param in task). Names are inferred by the task params too.
+It compares two .yml locale files, one in your source code (the *target*) and one in others' (gems, other projects) source code (*source*) and generates a beside-file with the keys you haven't translated yet.
+Then you can merge it. It is designed to detect changes between versions. For now, the target file cannot be renamed, and it is generated in 'config/locales/' + to_locale (param in task). Names are inferred by the task params.
 
 Also, it has three new rake tasks to provide information to you about missing translations between two locales, and continuous integration support.
 
-IT NEVER CHANGES YOUR SOURCE FILE, unless it doesn't exists, so it creates for you. 
+It never changes your source files (unless they don't yet exist, in which case they are created for you). 
 
 ## Installation
 
