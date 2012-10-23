@@ -13,6 +13,7 @@ It never changes your source files (unless they don't yet exist, in which case t
 
 Add this line to your application's Gemfile:
 
+    gem 'ya2yaml'
     gem 'transdifflation'
 
 And then execute:
