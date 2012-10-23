@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails'
+gem 'ya2yaml'
 
 group :development, :test do
   gem 'fudge'
@@ -11,7 +12,7 @@ group :development, :test do
   gem 'yard'
   gem 'simplecov'
   gem 'rake'
-
+  gem 'rspec'
   gem 'rspec-rails'
   gem 'guard-sass', :require => false
   gem 'pry'

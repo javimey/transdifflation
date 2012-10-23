@@ -35,7 +35,6 @@ module Transdifflation
       from_locale ||= I18n.default_locale
       to_locale ||= I18n.locale
 
-
       yml_gem_content = YAMLReader.read_YAML_from_gem(gem_name, path_to_yaml_in_gem)
       puts "Loaded YAML content from gem '#{gem_name}', file '#{path_to_yaml_in_gem}'"
 
@@ -206,13 +205,13 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-          if(!target.has_key? (source_key_translated))
+          if(!target.has_key?(source_key_translated))
             target[source_key_translated] = Hash.new
           end
           translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
         else
           #it's a leaf node
-          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
+          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key?(source_key_translated)
         end
       }
     end

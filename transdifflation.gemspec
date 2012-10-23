@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
   gem.version       = Transdifflation::VERSION
 
   #Dependencies
-  gem.add_dependency 'rails', '~> 3.2.8'
+  gem.add_dependency('rails', '~> 3.2.8')
+  gem.add_dependency('ya2yaml')
 
   gem.add_development_dependency 'rspec', '>= 2.8.0'
   gem.add_development_dependency 'guard-rspec'
@@ -28,4 +29,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'libnotify'
   gem.add_development_dependency 'pry'
 end
+
 
