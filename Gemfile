@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails'
+gem 'ya2yaml'
 
 group :development, :test do
   gem 'fudge'
