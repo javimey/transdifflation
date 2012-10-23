@@ -31,7 +31,7 @@ namespace :transdifflation do
       I18n.backend.load_translations
 
     end
-
+    translations = I18n.backend.send(:translations)
 
     hash_from_locale = translations[from_locale]
     hash_to_locale = translations[to_locale]
