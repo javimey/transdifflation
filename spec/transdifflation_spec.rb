@@ -76,6 +76,7 @@ describe :get_transdifflation_from_gem do
   end
 end
 
+
 describe :get_transdifflation_from_file do
 
   before(:each) do
@@ -148,6 +149,24 @@ describe :get_transdifflation_from_file do
   end
 end
 
+#describe :generate_diff_file do
+#  it 'should call translate_keys_in_same_yaml if removed_diff_hash.length > 0)' do
+#    Transdifflation::YAMLReader.stub(:read_YAML_from_pathfile).and_return({en: {:home => "hogar"}})
+#    yml_source_content = {es: {:home => "hogar", :street => "calle"}}
+#
+#    @comparer.stub(:translate_keys_in_same_yaml).and_raise(ArgumentError)
+#   # @comparer.stub(:generate_diff_file).and_raise(NameError)
+#
+#    File.stub(:join).and_return('idontcare')
+#    File.stub(:file?).and_return(true)
+#    File.stub(:file?).and_return(true)
+#
+#    #Finally simulate the call to generate_diff_file
+#    @comparer.stub(:generate_diff_file).and_return(nil)
+#    #call to method
+#    expect { @comparer.generate_diff_file(yml_source_content, "path_im_not_going_to_use", @from_locale, @to_locale) }.to raise_error(ArgumentError)
+#  end
+#end
 
 describe :comparer_common_methods do
 
