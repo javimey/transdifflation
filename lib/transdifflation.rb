@@ -109,8 +109,8 @@ module Transdifflation
     # @param [Hash] hash_from_locale I18n source translation to compare
     # @param [Hash] hash_to_locale I18n target translation to compare
     # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
-    
-    def coverage_rate(hash_from_locale, hash_to_locale, token)      
+    def coverage_rate(hash_from_locale, hash_to_locale, token = NOT_TRANSLATED)      
+        
       if hash_from_locale.nil?
         return "Translation coverage error: from_locale language not detected."
       end
@@ -129,9 +129,17 @@ module Transdifflation
       words, found = rate_from_branch(hash_from_locale, hash_to_locale, token, words, found)
       percent = (found.to_f/words.to_f) * 100
       truncate = "%.2f" % percent
-      return "#{truncate}% #{found}/#{words} words translated"
+      return "#{truncate}% #{found}/#{words} entries translated"
     end
 
+
+    # Get the number of translated keys 
+    #
+    # @param [Hash] hash_from I18n source translation to compare
+    # @param [Hash] hash_to I18n target translation to compare
+    # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
+    # @param [Integer] words Number of keys (accumulated) from hash_from
+    # @param [Integer] found Number of keys (accumulated) where token is not found in hash_to 
     def rate_from_branch(hash_from, hash_to, token, words, found)
 
       hash_from.each_pair{ |key, value|
@@ -144,9 +152,9 @@ module Transdifflation
           words, temp = rate_from_branch(hash_from[key.to_sym], hash_from[key.to_sym], token, words, found)
           end
         else
-          words = words + 1
+          words += 1
           if hash_to[key.to_sym]
-            found = found + 1 if !hash_to[key.to_sym].include?(token) 
+            found += 1 if !hash_to[key.to_sym].to_s.include?(token) 
           end          
         end
       }

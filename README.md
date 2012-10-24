@@ -1,10 +1,13 @@
-# Transdifflation
+# Transdifflation [![travis-ci](https://secure.travis-ci.org/Sage/transdifflation.png)](http://travis-ci.org/#!/Sage/transdifflation)
 
-What is Transdifflation? Transdifflation is an acronym of 'Translation' and 'Diff'.  
-It compares two .yml locate files, one in your source code (target) and one in others' (gems, other projects) source code (source) and generates a beside-file with the keys you hadn't translated yet.  
-Then you can merge it. It is designed to detect changes between versions. By now, target file cannot be renamed, and it is generated in 'config/locales/' + to_locale (param in task). Names are inferred by the task params too.
+What is Transdifflation? Transdifflation is a portmanteau of 'Translation' and 'Diff'.  It helps you to manage the translation of Rails i18n strings that appear in your application and the Ruby Gems it includes.
 
-IT NEVER CHANGES YOUR SOURCE FILE, unless it doesn't exists, so it creates for you. 
+It compares two .yml locale files, one in your source code (the *target*) and one in others' (gems, other projects) source code (*source*) and generates a beside-file with the keys you haven't translated yet.
+Then you can merge it. It is designed to detect changes between versions. For now, the target file cannot be renamed, and it is generated in 'config/locales/' + to_locale (param in task). Names are inferred by the task params.
+
+Also, it has three new rake tasks to provide information to you about missing translations between two locales, and continuous integration support.
+
+It never changes your source files (unless they don't yet exist, in which case they are created for you). 
 
 ## Installation
 
@@ -21,6 +24,8 @@ Or install it yourself as:
     $ gem install transdifflation
 
 ## Usage
+
+### How to configure your Rake tasks
 
 It needs a config file (**transdifflation.yml**) placed on your host root, or in 'config'. If not exists, a rake task is set up to generate it: ```rake transdifflation:config```. Config file looks like:
 
@@ -50,6 +55,11 @@ grouped_tasks:
   task_group_name: 
     - task_name1
     - task_name2
+
+ignore_paths:
+  - /path_one
+  - gem_path
+
 ```
 
 These nodes generates rake tasks. There are two types of tasks:
@@ -58,9 +68,32 @@ These nodes generates rake tasks. There are two types of tasks:
 
 *   type **file**: When it rans, it looks for the file in 'file_path_from_rails_root' is installed. It uses from_locale and to_locale to translate names and keys inside yaml. Tag_name is used to name target file in our host.
 
-Also, you can create grouped tasks in a node called 'grouped_taks'. Task **all** is automatially generated.  
+Also, you can create grouped tasks in a node called 'grouped_taks'. Task ```transdifflation:all``` is automatically generated.  
 
 Execute ```rake -T``` to determine sucess of config file. Your tasks should appear there, under namespace ```transdifflation:``
+
+
+### _'Out of the box'_ rake tasks
+
+There are two new tasks in the town:
+
+*   ```rake transdifflation:lost_in_translation[from_locale,to_locale]```
+*   ```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]```
+*   ```rake transdifflation:coverage[from_locale,to_locale]```
+
+These tasks are intended to be used to know what keys are missing between two locales. ```rake transdifflation:lost_in_translation[from_locale,to_locale]``` creates a file in ```[Rails.root]/config/locales/[from_locale]/missing_translations.yml.diff```(on YAML format), that you can use as a template to fulfill your translation.
+
+```rake transdifflation:lost_in_translation_ci[from_locale,to_locale]```
+doesn't create a file, it just fails if missing translations needed, so
+you can use it in a continuous integration environment, if you want to
+test that your translations are always completed between your third
+party gems' new versions, or other vendor's project new releases, or
+stuff like that... You can configure ignore_paths to ignore whatever gem
+you don't what to check
+
+```rake transdifflation:coverage[from_locale,to_locale]``` gives you
+information and statistics of translations. You can configure
+ignore_paths too. 
 
 
 

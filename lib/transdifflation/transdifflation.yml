@@ -28,6 +28,7 @@
 #    - task_name1
 #    - task_name2
 #
-
-
+#ignore_paths:
+#  - /Faker-
+#  - /faker-
 
