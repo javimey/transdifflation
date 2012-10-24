@@ -231,6 +231,7 @@ module Transdifflation
     # @param [Symbol] from_locale      Default locale in gem. Used to translate 'from'
     # @param [Symbol] to_locale        Default locale in host. Used to translate 'to'
     def generate_diff_file(yml_source_content, host_target_file, from_locale, to_locale)
+
       existant_yml = YAMLReader.read_YAML_from_pathfile(host_target_file)
       added_diff_hash, removed_diff_hash = Hash.new, Hash.new
 

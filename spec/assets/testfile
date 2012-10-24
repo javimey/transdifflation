@@ -1,3 +1,7 @@
 ADDED KEYS (Keys not found in your file, founded in source file) ********************
-:en:
+:es:
   :home: ! '**NOT_TRANSLATED** hogar'
+
+REMOVED KEYS (Keys not found in source file, founded in your file) ********************
+:es:
+  :dorothy: Dorothy
