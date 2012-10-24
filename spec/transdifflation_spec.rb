@@ -231,7 +231,7 @@ describe :comparer_common_methods do
     File.stub(:directory?).and_return(true)
     #File? Should return false, to simulate that the file is not created
     File.stub(:file?).and_return(true)
-   
+
     #now we must stub File.open, write and close in order to avoid fails on get_first_time_file
     mock_file = mock("File")
     mock_file.stub(:write).and_return(nil)
@@ -253,10 +253,10 @@ describe :comparer_common_methods do
 
     File.stub(:directory?).and_return(false)
     #File? Should return false, to simulate that the file is not created
-    
+
     File.stub(:join).and_return(["./spec/tempFolder"])
     File.stub(:file?).and_return(false)
-   
+
     #now we must stub File.open, write and close in order to avoid fails on get_first_time_file
     mock_file = mock("File")
     mock_file.stub(:write).and_return(nil)
@@ -277,10 +277,10 @@ describe :comparer_common_methods do
 
     File.stub(:directory?).and_return(false)
     #File? Should return false, to simulate that the file is not created
-    
+
     File.stub(:join).and_return(["./spec/tempFolder"])
     File.stub(:file?).and_return(false)
-   
+
     #now we must stub File.open, write and close in order to avoid fails on get_first_time_file
     mock_file = mock("File")
     mock_file.stub(:write).and_return(nil)
