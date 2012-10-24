@@ -24,7 +24,7 @@
 #  }
 #
 #grouped_tasks:
-#  task_group_name: 
+#  task_group_name:
 #    - task_name1
 #    - task_name2
 #

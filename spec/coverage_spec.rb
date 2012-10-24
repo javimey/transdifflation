@@ -8,7 +8,7 @@ describe :translation_coverage do
 			hash_from_locale = nil
 			hash_to_locale  = {}
 			token = "**NOT TRANSLATED**"
-			
+
 			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "Translation coverage error: from_locale language not detected."
 		end
 		it 'should return a message when hash_to_locale is an nil hash' do
@@ -16,7 +16,7 @@ describe :translation_coverage do
 			hash_from_locale = {}
 			hash_to_locale  = nil
 			token = "**NOT TRANSLATED**"
-			
+
 			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "Translation coverage error: to_locale language not detected."
 		end
 
@@ -25,7 +25,7 @@ describe :translation_coverage do
 			hash_from_locale = {}
 			hash_to_locale  = {}
 			token = "**NOT TRANSLATED**"
-			
+
 			@comparer.coverage_rate(hash_from_locale, hash_to_locale, token).should == "from_locale is empty, so you have everything translated"
 		end
 
