@@ -29,6 +29,6 @@
 #    - task_name2
 #
 #ignore_paths:
-#  - /Faker-
-#  - /faker-
+#  - path-1-
+#  - /gem_name_2-
 

@@ -45,8 +45,8 @@ describe :YAMLReader do
     it 'should not raise an error exception when a gem exists (rspec)' do
       a_gem = 'rspec'
       a_path = 'README.md'
-
       Transdifflation::YAMLReader.stub(:get_YAML_content_from_YAML_file).and_return(':a => 2')
+      
       expect {Transdifflation::YAMLReader.read_YAML_from_gem(a_gem, a_path)}.to_not raise_error(ArgumentError)
     end
   end

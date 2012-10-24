@@ -19,7 +19,7 @@ module Transdifflation
     #Instance variable to get if changes have been detected
     attr_reader :has_changes
 
-    def initialize()
+    def initialize
       @has_changes = false
     end
 
@@ -35,16 +35,20 @@ module Transdifflation
       from_locale ||= I18n.default_locale
       to_locale ||= I18n.locale
 
-
       yml_gem_content = YAMLReader.read_YAML_from_gem(gem_name, path_to_yaml_in_gem)
       puts "Loaded YAML content from gem '#{gem_name}', file '#{path_to_yaml_in_gem}'"
-
 
       #build the file name in our host
       filename_in_gem_SRC = File.basename( path_to_yaml_in_gem )
       host_target_filename = filename_in_gem_SRC.gsub(/-?#{from_locale}\./) do |match_s|
         match_s.sub("#{from_locale}", "#{to_locale}")
       end
+
+      #The folder is created if doesn't exist
+      if !File.directory?("config/locales/#{to_locale}")
+        FileUtils.mkdir_p(File.join(Rails.root, "config/locales/#{to_locale}"))
+      end
+
       host_target_file = File.join( Rails.root, "config/locales/#{to_locale}", "#{gem_name}.#{host_target_filename}")
 
       if(!File.file? host_target_file)
@@ -52,11 +56,8 @@ module Transdifflation
       else
         generate_diff_file(yml_gem_content, host_target_file, from_locale, to_locale)
       end
-
       @has_changes
     end
-
-
 
     # Get Diff from YAML translation locale file from filesystem and generate differences in a file on our host
     #
@@ -74,10 +75,16 @@ module Transdifflation
       puts "Loaded YAML content from file '#{path_to_yaml_relative_from_rails_root}'"
 
       #build the file name in our host
-      filename_in_SRC = File.basename( path_to_yaml_relative_from_rails_root )
+      filename_in_SRC = File.basename(path_to_yaml_relative_from_rails_root )
       host_target_filename = filename_in_SRC.gsub(/-?#{from_locale}\./) do |match_s|
         match_s.sub("#{from_locale}", "#{to_locale}")
       end
+
+      #The folder is created if doesn't exist
+      if !File.directory?("config/locales/#{to_locale}")
+        FileUtils.mkdir_p(File.join(Rails.root, "config/locales/#{to_locale}"))
+      end
+
       host_target_file = File.join( Rails.root, "config/locales/#{to_locale}", "#{tag_name}.#{host_target_filename}")
 
       if(!File.file? host_target_file)
@@ -206,17 +213,23 @@ module Transdifflation
 
         #if value is a hash, we call it recursively
         if (source_value.instance_of? Hash)
-          if(!target.has_key? (source_key_translated))
+          if(!target.has_key?(source_key_translated))
             target[source_key_translated] = Hash.new
           end
           translate_keys_in_same_yaml(source_value, target[source_key_translated], from_locale, to_locale, add_NOT_TRANSLATED) #recurrence of other hashes
         else
           #it's a leaf node
-          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key? (source_key_translated)
+          target[source_key_translated] = (add_NOT_TRANSLATED ? "#{NOT_TRANSLATED}#{source_value}" : "#{source_value}") if  !target.has_key?(source_key_translated)
         end
       }
     end
 
+    # Generates a difference file from YAML hash
+    #
+    # @param [Hash]   yml_source_content           Source YAML-format hash
+    # @param [Hash]   host_target_file           Target file
+    # @param [Symbol] from_locale      Default locale in gem. Used to translate 'from'
+    # @param [Symbol] to_locale        Default locale in host. Used to translate 'to'
     def generate_diff_file(yml_source_content, host_target_file, from_locale, to_locale)
 
       existant_yml = YAMLReader.read_YAML_from_pathfile(host_target_file)
@@ -230,12 +243,9 @@ module Transdifflation
         temp_removed_diff_hash = {}
         translate_keys_in_same_yaml(removed_diff_hash, temp_removed_diff_hash, from_locale, to_locale, false)
         removed_diff_hash = temp_removed_diff_hash
-
       end
 
-
       if( added_diff_hash.length > 0 || removed_diff_hash.length > 0 )
-
         diff_file = File.join(File.dirname(host_target_file), "#{File.basename(host_target_file)}.diff")
         diff_file_stream = File.new(diff_file, "w+:UTF-8")
         begin

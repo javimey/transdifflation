@@ -9,7 +9,9 @@ module Transdifflation
     def self.read_YAML_from_gem(gem_name, file_path_to_yaml_in_gem)
 
       #get where the gem is localized
+
       gem_SRC =`bundle show #{gem_name}`.chomp
+
       raise ArgumentError.new("Gem '#{gem_name}' not installed") if ($?.to_i != 0)  #get return code and check if is different from zero
 
       #get the file within the gem
