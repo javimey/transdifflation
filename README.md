@@ -28,7 +28,7 @@ Or install it yourself as:
 
 ### How to configure your Rake tasks
 
-It needs a config file (**transdifflation.yml**) placed on your host root, or in 'config'. If not exists, a rake task is set up to generate it: ```rake transdifflation:config```. Config file looks like:
+It needs a config file (`transdifflation.yml`) placed on your host root, or in 'config'. If not exists, a rake task is set up to generate it: ```rake transdifflation:config```. Config file looks like:
 
 ```yml
 tasks:
