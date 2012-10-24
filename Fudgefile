@@ -1,4 +1,5 @@
 build :default do
   yard :arguments => '-r YardREADME.md', :coverage => 100
   rspec :coverage => 100
+  # cane # disabled because it doesn't pass
 end

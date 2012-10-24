@@ -10,6 +10,7 @@ group :development, :test do
   gem 'fudge'
   gem 'rspec'
   gem 'yard'
+  gem 'cane'
   gem 'simplecov'
   gem 'rake'
   gem 'rspec'
