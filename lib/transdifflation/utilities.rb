@@ -6,10 +6,10 @@ module Transdifflation
   class HashSymbolTranslator
     # Convert keys (strings) into symbols
     def symbolize(hash)
-      hash = hash.inject({}) { |memo,(k,v)| 
+      hash = hash.inject({}) { |memo,(k,v)|
           if(v.instance_of? Hash)
              v = symbolize(v)
-          end 
+          end
           memo[k.to_sym] = v
           memo
       }
@@ -17,10 +17,10 @@ module Transdifflation
     end
      # Convert keys into string
      def unsymbolize(hash)
-      hash = hash.inject({}) { |memo,(k,v)| 
+      hash = hash.inject({}) { |memo,(k,v)|
           if(v.instance_of? Hash)
              v = unsymbolize(v)
-          end 
+          end
           memo[k.to_s] = v
           memo
       }
@@ -31,6 +31,7 @@ module Transdifflation
   end
 end
 
+# monkeypatch the Hash class to convert to/from symbols
 class Hash
 
   #convert all keys in a Hash (presumily from YAML) in symbols

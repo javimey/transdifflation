@@ -26,7 +26,7 @@ describe :YAMLReader do
       File.stub(:file?).and_return(true)
       ::Rails.should_receive(:root).and_return('/rails')
 
-      
+
       expect {Transdifflation::YAMLReader.read_YAML_from_filesystem('whatever')}.to_not raise_error(ArgumentError)
     end
   end
@@ -46,7 +46,7 @@ describe :YAMLReader do
       a_gem = 'rspec'
       a_path = 'README.md'
       Transdifflation::YAMLReader.stub(:get_YAML_content_from_YAML_file).and_return(':a => 2')
-      
+
       expect {Transdifflation::YAMLReader.read_YAML_from_gem(a_gem, a_path)}.to_not raise_error(ArgumentError)
     end
   end
@@ -73,8 +73,8 @@ describe :YAMLReader do
     it 'should return {} when there is no YAML file' do
       a_yml_path = 'bad.yml'
       YAML.stub(:load_file).and_return(false)
-      
-     Transdifflation::YAMLReader.get_YAML_content_from_YAML_file(a_yml_path).should == {}
+
+      Transdifflation::YAMLReader.get_YAML_content_from_YAML_file(a_yml_path).should == {}
     end
 
     it 'should return the YAML in case it load properly the file' do
