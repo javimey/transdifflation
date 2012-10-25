@@ -9,7 +9,7 @@ require 'pry'
 # The main module for the program
 module Transdifflation
 
-  require 'transdifflation/railtie' if defined?(Rails) 
+  require 'transdifflation/railtie' if defined?(Rails)
 
   # Implements the core
   class Comparer
@@ -116,8 +116,8 @@ module Transdifflation
     # @param [Hash] hash_from_locale I18n source translation to compare
     # @param [Hash] hash_to_locale I18n target translation to compare
     # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
-    def coverage_rate(hash_from_locale, hash_to_locale, token = NOT_TRANSLATED)      
-        
+    def coverage_rate(hash_from_locale, hash_to_locale, token = NOT_TRANSLATED)
+
       if hash_from_locale.nil?
         return "Translation coverage error: from_locale language not detected."
       end
@@ -125,9 +125,9 @@ module Transdifflation
       if hash_to_locale.nil?
         return "Translation coverage error: to_locale language not detected."
       end
-      
+
       if hash_from_locale.empty?
-        return "from_locale is empty, so you have everything translated"         
+        return "from_locale is empty, so you have everything translated"
       end
 
       words = 0
@@ -140,13 +140,13 @@ module Transdifflation
     end
 
 
-    # Get the number of translated keys 
+    # Get the number of translated keys
     #
     # @param [Hash] hash_from I18n source translation to compare
     # @param [Hash] hash_to I18n target translation to compare
     # @param [String] token The string you want to compare. example: **NOT TRANSLATED**
     # @param [Integer] words Number of keys (accumulated) from hash_from
-    # @param [Integer] found Number of keys (accumulated) where token is not found in hash_to 
+    # @param [Integer] found Number of keys (accumulated) where token is not found in hash_to
     def rate_from_branch(hash_from, hash_to, token, words, found)
 
       hash_from.each_pair{ |key, value|
@@ -161,12 +161,12 @@ module Transdifflation
         else
           words += 1
           if hash_to[key.to_sym]
-            found += 1 if !hash_to[key.to_sym].to_s.include?(token) 
-          end          
+            found += 1 if !hash_to[key.to_sym].to_s.include?(token)
+          end
         end
       }
       return words, found
-    end      
+    end
 
     private
 
@@ -242,14 +242,14 @@ module Transdifflation
         #we have to reprocess hash to show user what happened
         temp_removed_diff_hash = {}
         translate_keys_in_same_yaml(removed_diff_hash, temp_removed_diff_hash, from_locale, to_locale, false)
-        removed_diff_hash = temp_removed_diff_hash  
+        removed_diff_hash = temp_removed_diff_hash
       end
 
       if( added_diff_hash.length > 0 || removed_diff_hash.length > 0 )
         diff_file = File.join(File.dirname(host_target_file), "#{File.basename(host_target_file)}.diff")
         diff_file_stream = File.new(diff_file, "w+:UTF-8")
         begin
-           
+
           if (added_diff_hash.length > 0)
             diff_file_stream.write("ADDED KEYS (Keys not found in your file, founded in source file) ********************\n")
             diff_file_stream.write(YAMLWriter.to_yaml(added_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
@@ -266,7 +266,7 @@ module Transdifflation
         end
         puts "File #{File.basename( host_target_file )} processed >> %s" %  [ "#{File.basename( diff_file )} has the changes!"]
         @has_changes = true
-      else 
+      else
         puts "File #{File.basename( host_target_file )} processed >> No changes!"
       end
     end

@@ -14,7 +14,7 @@ module Transdifflation
     railtie_name :transdifflation
     rake_tasks do
       begin
-        
+
         Dir[ File.join(File.dirname(__FILE__), '../tasks/*.rake')] .each { |f| load f }  #Load static tasks
 
 
@@ -98,7 +98,7 @@ module Transdifflation
         end
 
       rescue Transdifflation::ConfigFileNotFound
-        #Generate task to set-up 
+        #Generate task to set-up
         namespace :transdifflation do
           desc "Task to set-up config file in host"
           task :setup do
@@ -111,11 +111,11 @@ module Transdifflation
 
       rescue Transdifflation::ConfigFileWithErrors => e
 
-        raise "Gem 'Transdifflation' says => #{e.message}"  
+        raise "Gem 'Transdifflation' says => #{e.message}"
 
       rescue Exception => e
 
-        raise "Gem 'Transdifflation' says => #{e.message}"  
+        raise "Gem 'Transdifflation' says => #{e.message}"
 
       end
     end
