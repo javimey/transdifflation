@@ -42,7 +42,7 @@ namespace :transdifflation do
     comparer = Transdifflation::Comparer.new
     differences = comparer.get_rest_of_translation(hash_from_locale, hash_to_locale, from_locale, to_locale)
     differences = { to_locale.to_s => differences } if !differences.empty?
-
+    differences
   end
 
   desc "What is not translated in our app"
