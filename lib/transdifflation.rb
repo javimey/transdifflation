@@ -33,7 +33,7 @@ module Transdifflation
       from_locale ||= I18n.default_locale
       to_locale ||= I18n.locale
 
-      yml_gem_content = YAMLReader.red_YAML_from_gem(gem_name, path_to_yaml_in_gem)
+      yml_gem_content = YAMLReader.read_YAML_from_gem(gem_name, path_to_yaml_in_gem)
 
       puts "Loaded YAML content from gem '#{gem_name}', file '#{path_to_yaml_in_gem}'"
 
