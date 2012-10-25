@@ -19,7 +19,7 @@ module Transdifflation
     #Instance variable to get if changes have been detected
     attr_reader :has_changes
 
-    def initialize
+    daef initialize
       @has_changes = false
     end
 
@@ -35,11 +35,13 @@ module Transdifflation
       from_locale ||= I18n.default_locale
       to_locale ||= I18n.locale
 
-      yml_gem_content = YAMLReader.read_YAML_from_gem(gem_name, path_to_yaml_in_gem)
+      yml_gem_content = YAMLReader.red_YAML_from_gem(gem_name, path_to_yaml_in_gem)
+
       puts "Loaded YAML content from gem '#{gem_name}', file '#{path_to_yaml_in_gem}'"
 
       #build the file name in our host
       filename_in_gem_SRC = File.basename( path_to_yaml_in_gem )
+      
       host_target_filename = filename_in_gem_SRC.gsub(/-?#{from_locale}\./) do |match_s|
         match_s.sub("#{from_locale}", "#{to_locale}")
       end
@@ -249,7 +251,6 @@ module Transdifflation
         diff_file = File.join(File.dirname(host_target_file), "#{File.basename(host_target_file)}.diff")
         diff_file_stream = File.new(diff_file, "w+:UTF-8")
         begin
-           
           if (added_diff_hash.length > 0)
             diff_file_stream.write("ADDED KEYS (Keys not found in your file, founded in source file) ********************\n")
             diff_file_stream.write(YAMLWriter.to_yaml(added_diff_hash))  #we can't use YAML#dump due to issues wuth Utf8 chars
